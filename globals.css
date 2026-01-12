@@ -1,0 +1,57 @@
+:root{
+  --bg:#0b1020;
+  --card:#111a33;
+  --text:#e8ecff;
+  --muted:#a9b3d6;
+  --border:rgba(255,255,255,0.12);
+  --accent:#6aa6ff;
+  --danger:#ff6a7a;
+  --ok:#5ce0a0;
+  --shadow: 0 14px 40px rgba(0,0,0,0.35);
+  --radius:14px;
+  --max: 980px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:linear-gradient(180deg,#070a14 0%, #0b1020 60%, #070a14 100%); color:var(--text); font-family:var(--sans);}
+a{color:inherit;text-decoration:none}
+button, input, textarea, select {font-family:inherit;}
+.container{max-width:var(--max); margin:0 auto; padding:28px 18px;}
+.nav{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 18px; border:1px solid var(--border); background:rgba(17,26,51,0.65); backdrop-filter: blur(12px); border-radius:var(--radius); box-shadow:var(--shadow);}
+.brand{display:flex; flex-direction:column; gap:4px}
+.brand strong{letter-spacing:0.2px}
+.brand span{color:var(--muted); font-size:13px}
+.navlinks{display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end}
+.pill{padding:9px 12px; border:1px solid var(--border); border-radius:999px; font-size:14px; color:var(--text); background:rgba(255,255,255,0.04);}
+.pill:hover{border-color:rgba(255,255,255,0.2)}
+.hero{margin-top:18px; padding:22px; border:1px solid var(--border); border-radius:var(--radius); background:rgba(17,26,51,0.55); box-shadow:var(--shadow);}
+.hero h1{margin:0 0 10px 0; font-size:28px;}
+.hero p{margin:0; color:var(--muted); line-height:1.5}
+.grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:14px; margin-top:14px;}
+.card{grid-column:span 6; padding:18px; border:1px solid var(--border); border-radius:var(--radius); background:rgba(17,26,51,0.55); box-shadow:var(--shadow);}
+@media (max-width: 840px){ .card{grid-column:span 12;} }
+.card h2{margin:0 0 8px 0; font-size:18px}
+.card p{margin:0 0 14px 0; color:var(--muted); line-height:1.5}
+.primary{display:inline-flex; align-items:center; gap:8px; padding:11px 14px; border:none; border-radius:12px; background:var(--accent); color:#06102a; font-weight:700; cursor:pointer;}
+.primary:hover{filter:brightness(1.05)}
+.secondary{display:inline-flex; align-items:center; gap:8px; padding:11px 14px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); font-weight:700; cursor:pointer;}
+.secondary:hover{border-color:rgba(255,255,255,0.22)}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+label{font-size:13px; color:var(--muted)}
+select,input,textarea{width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:12px; background:rgba(0,0,0,0.25); color:var(--text); outline:none;}
+textarea{min-height:200px; line-height:1.5}
+.field{display:flex; flex-direction:column; gap:8px; margin:12px 0;}
+.kbd{font-family:var(--mono); font-size:12px; padding:2px 7px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,0.04); color:var(--muted)}
+.small{font-size:13px; color:var(--muted); line-height:1.5}
+hr.sep{border:none; border-top:1px solid var(--border); margin:18px 0}
+.item{padding:14px; border:1px solid var(--border); border-radius:12px; background:rgba(0,0,0,0.18); margin:10px 0}
+.item h3{margin:0 0 8px 0; font-size:14px; color:var(--muted); font-weight:600}
+.prompt{margin:0 0 10px 0; line-height:1.5}
+.option{display:flex; align-items:center; gap:10px; margin:6px 0}
+.badge{display:inline-flex; align-items:center; gap:6px; padding:4px 9px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted)}
+.good{color:var(--ok)}
+.bad{color:var(--danger)}
+.result{padding:14px; border:1px solid var(--border); border-radius:12px; background:rgba(0,0,0,0.18)}
+pre{white-space:pre-wrap; word-break:break-word; font-family:var(--mono); font-size:12px; color:var(--muted)}
+.footer{margin-top:18px; padding:14px; border:1px solid var(--border); border-radius:var(--radius); background:rgba(17,26,51,0.35); color:var(--muted); font-size:13px; line-height:1.5}
