@@ -103,18 +103,11 @@ export function demoWritingTask(topic: string): { task: WritingTask; rubric: any
     genre: "email",
     title: "Formal email: complaint",
     prompt:
-      "You recently stayed at a hotel and were unhappy with the service. Write a formal email to the manager.
-
-" +
-      "Include:
-" +
-      "• what went wrong (give 2–3 details)
-" +
-      "• how it affected your stay
-" +
-      "• what solution you expect (refund, apology, future discount)
-
-" +
+      "You recently stayed at a hotel and were unhappy with the service. Write a formal email to the manager.\n\n" +
+      "Include:\n" +
+      "- what went wrong (give 2–3 details)\n" +
+      "- how it affected your stay\n" +
+      "- what solution you expect (refund, apology, future discount)\n\n" +
       "Write 180–220 words.",
     word_range: { min: 180, max: 220 }
   };
