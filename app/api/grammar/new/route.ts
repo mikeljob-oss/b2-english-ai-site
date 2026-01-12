@@ -19,14 +19,14 @@ export async function POST(req: Request) {
         if (!aiEnabled()) {
             exercise = demoGrammarExercise(topic, count);
         } else {
+            // Compose system and developer prompts with proper newline joins
             const system = [
                 "You are an expert CEFR B2 English item writer.",
                 "Create unambiguous, classroom-appropriate exercises.",
                 "Never reveal answers inside student_view.",
                 "Avoid trick questions and cultural bias.",
                 "Return ONLY valid JSON that matches the provided schema."
-            ].join("
-");
+            ].join("\n");
 
             const developer = [
                 `Generate a B2 grammar exercise set with ${count} items.`,
@@ -40,8 +40,7 @@ export async function POST(req: Request) {
                 "- Exactly one correct answer per item.",
                 "- Provide brief rationales (1–2 sentences) in answer_key only.",
                 "- Include per-item tags from a controlled list: articles, prepositions, narrative_tenses, conditionals, modals, relative_clauses, passive, reported_speech, linkers."
-            ].join("
-");
+            ].join("\n");
 
             const schema = GrammarExerciseSchema;
 
@@ -57,6 +56,7 @@ export async function POST(req: Request) {
             exercise = parsed;
         }
 
+        // Encrypt server-only payload (answer key) into a token the browser cannot read.
         const payload = {
             answer_key: exercise.answer_key,
             meta: exercise.meta,
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         const submission_token = encryptJson(payload);
 
         const exercise_id = "ex_" + cryptoRandom();
-        const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+        const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
 
         return NextResponse.json({
             exercise_id,
@@ -73,11 +73,12 @@ export async function POST(req: Request) {
             student_view: exercise.student_view,
             submission_token
         });
-    } catch (e) {
+    } catch (e: any) {
         return NextResponse.json({ error: e?.message ?? "Unknown error" }, { status: 400 });
     }
 }
 
 function cryptoRandom(): string {
+    // simple random id without importing node crypto in edge runtime
     return Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2);
 }
