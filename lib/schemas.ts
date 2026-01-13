@@ -66,9 +66,9 @@ export const WritingNewResponseSchema = z.object({
 export const WritingFeedbackSchema = z.object({
   rubric: z.object({
     content: z.object({ band: z.string(), evidence: z.string() }),
-    communicative_achievement: z.object({ band: z.string(), evidence: string() }),
+    communicative_achievement: z.object({ band: z.string(), evidence: z.string() }),
     organisation: z.object({ band: z.string(), evidence: z.string() }),
-    language: z.object({ band: z.string(), evidence: string() })
+    language: z.object({ band: z.string(), evidence: z.string() })
   }),
   priority_actions: z.array(z.string()).min(1).max(5),
   targeted_corrections: z.array(z.object({
