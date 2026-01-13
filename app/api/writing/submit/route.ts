@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     const payload = decryptJson<{ task: any }>(token);
     const task = payload.task;
 
+    // If AI is disabled, return demo feedback
     if (!aiEnabled()) {
       return NextResponse.json(demoWritingFeedback(text));
     }
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
       text
     ].join("\n");
 
-    const schema = WritingFeedbackSchema.toJSON();
+    const schema = WritingFeedbackSchema;
     const raw = await callOpenAIJson({
       system,
       developer,
@@ -60,7 +61,8 @@ export async function POST(req: Request) {
 
     const parsed = WritingFeedbackSchema.parse(raw);
     return NextResponse.json(parsed);
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "Unknown error" }, { status: 400 });
+  } catch (e: unknown) {
+    const errorMessage = (e as any)?.message ?? "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }
