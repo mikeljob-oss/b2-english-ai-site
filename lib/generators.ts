@@ -15,42 +15,63 @@ const TAG_TIPS: Record<string, string> = {
   linkers: "Use a range of linkers (however, therefore, whereas) and avoid repeating the same ones."
 };
 export function demoGrammarExercise(topic: string, count: number): GrammarExercise {
-  const items = [
+  // Base templates for demo items. Each call will shuffle these to provide a different order
+  const templates: Array<{
+    type: "mcq" | "gap_fill" | "sentence_transformation" | "error_correction";
+    prompt: string;
+    options?: string[];
+    note?: string;
+  }> = [
     {
-      item_id: id("i"),
-      type: "mcq" as const,
+      type: "mcq",
       prompt: "By the time we arrived, the film ___.",
-      options: ["started", "had started", "has started", "was starting"]
+      options: ["started", "had started", "has started", "was starting"],
     },
     {
-      item_id: id("i"),
-      type: "gap_fill" as const,
+      type: "gap_fill",
       prompt: "If I ____ about the traffic, I would have left earlier.",
-      note: "Complete the conditional sentence."
+      note: "Complete the conditional sentence.",
     },
     {
-      item_id: id("i"),
-      type: "sentence_transformation" as const,
+      type: "sentence_transformation",
       prompt: "Rewrite using the word given: 'Despite being tired, she finished the report.' (ALTHOUGH)",
-      note: "Use 4–8 words."
+      note: "Use 4–8 words.",
     },
     {
-      item_id: id("i"),
-      type: "error_correction" as const,
+      type: "error_correction",
       prompt: "Correct the sentence: 'I have been to London last year.'",
-      note: "Fix the tense/time expression."
+      note: "Fix the tense/time expression.",
     },
     {
-      item_id: id("i"),
-      type: "mcq" as const,
+      type: "mcq",
       prompt: "You ____ have told me earlier; now it’s too late to change the booking.",
-      options: ["must", "should", "can", "might"]
-    }
+      options: ["must", "should", "can", "might"],
+    },
   ];
-  // Repeat with variations to reach count
-  const expanded = [];
-  for (let k = 0; k < count; k++) expanded.push(items[k % items.length]);
-  const finalItems = expanded.map((it, idx) => ({ ...it, item_id: it.item_id + "_" + idx }));
+  // Shuffle the templates to vary the exercise order on each call
+  const shuffled = templates
+    .map((t) => ({ sort: Math.random(), value: t }))
+    .sort((a, b) => a.sort - b.sort)
+    .map((t) => t.value);
+  // Generate the final items list up to the requested count, cycling through the shuffled templates
+  const finalItems: Array<{
+    item_id: string;
+    type: "mcq" | "gap_fill" | "sentence_transformation" | "error_correction";
+    prompt: string;
+    options?: string[];
+    note?: string;
+  }> = [];
+  for (let k = 0; k < count; k++) {
+    const template = shuffled[k % shuffled.length];
+    finalItems.push({
+      item_id: id("i"),
+      type: template.type,
+      prompt: template.prompt,
+      options: template.options,
+      note: template.note,
+    });
+  }
+  // Build the answer key for each generated item
   const key = finalItems.map((it) => {
     if (it.type === "mcq") {
       const correct = it.prompt.includes("film") ? "had started" : "should";
@@ -60,7 +81,7 @@ export function demoGrammarExercise(topic: string, count: number): GrammarExerci
         rationale: it.prompt.includes("film")
           ? "Past perfect shows the earlier action happened before we arrived."
           : "‘Should have’ expresses criticism about a past action.",
-        tag: it.prompt.includes("film") ? "narrative_tenses" : "modals"
+        tag: it.prompt.includes("film") ? "narrative_tenses" : "modals",
       };
     }
     if (it.type === "gap_fill") {
@@ -68,7 +89,7 @@ export function demoGrammarExercise(topic: string, count: number): GrammarExerci
         item_id: it.item_id,
         correct_answer: "had known",
         rationale: "Third conditional uses past perfect in the if-clause.",
-        tag: "conditionals"
+        tag: "conditionals",
       };
     }
     if (it.type === "sentence_transformation") {
@@ -76,24 +97,30 @@ export function demoGrammarExercise(topic: string, count: number): GrammarExerci
         item_id: it.item_id,
         correct_answer: "Although she was tired, she finished the report.",
         rationale: "Use ‘although’ to introduce the contrast clause.",
-        tag: "linkers"
+        tag: "linkers",
       };
     }
+    // error_correction
     return {
       item_id: it.item_id,
       correct_answer: "I went to London last year.",
-      rationale: "A finished time in the past (‘last year’) takes past simple, not present perfect.",
-      tag: "narrative_tenses"
+      rationale:
+        "A finished time in the past (‘last year’) takes past simple, not present perfect.",
+      tag: "narrative_tenses",
     };
   });
   return {
-    meta: { level: "B2", topic: topic === "random" ? "general" : topic, item_types: ["mcq", "gap_fill", "sentence_transformation", "error_correction"] },
+    meta: {
+      level: "B2",
+      topic: topic === "random" ? "general" : topic,
+      item_types: ["mcq", "gap_fill", "sentence_transformation", "error_correction"],
+    },
     student_view: {
       title: "B2 Grammar Mix",
       instructions: "Complete all items. Submit to see answers and feedback.",
-      items: finalItems
+      items: finalItems,
     },
-    answer_key: key
+    answer_key: key,
   };
 }
 export function demoWritingTask(topic: string): { task: WritingTask; rubric: any } {
