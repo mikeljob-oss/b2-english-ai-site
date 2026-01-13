@@ -54,13 +54,9 @@ export function demoGrammarExercise(topic: string, count: number): GrammarExerci
     .sort((a, b) => a.sort - b.sort)
     .map((t) => t.value);
   // Generate the final items list up to the requested count, cycling through the shuffled templates
-  const finalItems: Array<{
-    item_id: string;
-    type: "mcq" | "gap_fill" | "sentence_transformation" | "error_correction";
-    prompt: string;
-    options?: string[];
-    note?: string;
-  }> = [];
+  // Use an untyped array for final items. Specifying a discriminated union type here causes
+  // TypeScript to require the `options` property on non‑MCQ items, which isn't needed.
+  const finalItems: any[] = [];
   for (let k = 0; k < count; k++) {
     const template = shuffled[k % shuffled.length];
     finalItems.push({
