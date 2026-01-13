@@ -45,7 +45,6 @@ export async function POST(req: Request) {
         schema,
         temperature: 0.7
       });
-
       taskBundle = WritingNewResponseSchema.parse(taskBundle);
     }
 
@@ -58,7 +57,8 @@ export async function POST(req: Request) {
       task: taskBundle.task,
       submission_token
     });
-  } catch (e) {
-    return NextResponse.json({ error: e?.message ?? "Unknown error" }, { status: 400 });
+  } catch (e: unknown) {
+    const errorMessage = (e as any)?.message ?? "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }
