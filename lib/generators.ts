@@ -13,96 +13,177 @@ const TAG_TIPS: Record<string, string> = {
   passive: "Use passive when the doer is unknown/unimportant; keep tense correct (is done / was done / has been done).",
   reported_speech: "Backshift when needed and adjust time expressions (today → that day).",
   linkers: "Use a range of linkers (however, therefore, whereas) and avoid repeating the same ones."
+  ,
+  // Additional tags for demo grammar exercises
+  verb_patterns: "Use gerunds or infinitives appropriately after verbs (e.g., suggest + gerund, decide + to-infinitive).",
+  comparatives: "Use comparatives and superlatives correctly; use 'the most' for the superlative of long adjectives.",
+  inversion: "Invert the auxiliary and subject after negative adverbials for emphasis (e.g., 'Not until...' 'Rarely have...').",
+  quantifiers: "Use 'many/few' with countable nouns and 'much/little' with uncountable nouns.",
+  time_expressions: "After 'it’s high/about time' use a past simple verb to talk about the present.",
+  present_perfect: "Use present perfect for actions that started in the past and continue to the present or when the time is not specified.",
+  word_order: "In indirect questions, use statement word order (e.g., 'Do you know where the station is?')."
 };
 export function demoGrammarExercise(topic: string, count: number): GrammarExercise {
-  // Base templates for demo items. Each call will shuffle these to provide a different order
-  const templates: Array<{
+  // Define a richer set of demo templates with pre-defined correct answers, rationales and tags.
+  type Template = {
     type: "mcq" | "gap_fill" | "sentence_transformation" | "error_correction";
     prompt: string;
     options?: string[];
     note?: string;
-  }> = [
+    correct: string;
+    rationale: string;
+    tag: string;
+  };
+  const templates: Template[] = [
+    // Original demo items
     {
       type: "mcq",
       prompt: "By the time we arrived, the film ___.",
       options: ["started", "had started", "has started", "was starting"],
+      correct: "had started",
+      rationale: "Past perfect shows the earlier action happened before we arrived.",
+      tag: "narrative_tenses",
     },
     {
       type: "gap_fill",
       prompt: "If I ____ about the traffic, I would have left earlier.",
       note: "Complete the conditional sentence.",
+      correct: "had known",
+      rationale: "Third conditional uses past perfect in the if-clause.",
+      tag: "conditionals",
     },
     {
       type: "sentence_transformation",
       prompt: "Rewrite using the word given: 'Despite being tired, she finished the report.' (ALTHOUGH)",
       note: "Use 4–8 words.",
+      correct: "Although she was tired, she finished the report.",
+      rationale: "Use ‘although’ to introduce the contrast clause.",
+      tag: "linkers",
     },
     {
       type: "error_correction",
       prompt: "Correct the sentence: 'I have been to London last year.'",
       note: "Fix the tense/time expression.",
+      correct: "I went to London last year.",
+      rationale: "A finished time in the past (‘last year’) takes past simple, not present perfect.",
+      tag: "narrative_tenses",
     },
     {
       type: "mcq",
       prompt: "You ____ have told me earlier; now it’s too late to change the booking.",
       options: ["must", "should", "can", "might"],
+      correct: "should",
+      rationale: "‘Should have’ expresses criticism about a past action.",
+      tag: "modals",
+    },
+    // Additional demo items to provide variety
+    {
+      type: "mcq",
+      prompt: "I wish I ____ so much coffee last night; I couldn't sleep.",
+      options: ["didn't drink", "haven't drunk", "hadn't drunk", "won't drink"],
+      correct: "hadn't drunk",
+      rationale: "Use past perfect after 'wish' to express regret about a past action.",
+      tag: "narrative_tenses",
+    },
+    {
+      type: "gap_fill",
+      prompt: "She would have come to the party if she ____ (know) you were there.",
+      note: "Complete the conditional sentence.",
+      correct: "had known",
+      rationale: "Third conditional uses past perfect in the if-clause.",
+      tag: "conditionals",
+    },
+    {
+      type: "error_correction",
+      prompt: "Correct the sentence: 'They suggested to go by train.'",
+      note: "Fix the verb pattern.",
+      correct: "They suggested going by train.",
+      rationale: "Use a gerund after ‘suggest’ rather than an infinitive.",
+      tag: "verb_patterns",
+    },
+    {
+      type: "sentence_transformation",
+      prompt: "Rewrite using the word given: 'I haven't seen a film as exciting as this in years.' (MOST)",
+      note: "Use 5–9 words.",
+      correct: "This is the most exciting film I have seen in years.",
+      rationale: "Use the superlative form 'the most exciting' with present perfect to express experience.",
+      tag: "comparatives",
+    },
+    {
+      type: "mcq",
+      prompt: "He ____ be French because he hardly speaks any French.",
+      options: ["can't", "mustn't", "might", "shouldn't"],
+      correct: "can't",
+      rationale: "'Can't' expresses deduction that something is impossible.",
+      tag: "modals",
+    },
+    {
+      type: "gap_fill",
+      prompt: "Not until I reached the station ____ that I'd left my wallet at home.",
+      note: "Use inversion.",
+      correct: "did I realise",
+      rationale: "After 'Not until', invert the auxiliary and subject (did I realise).",
+      tag: "inversion",
+    },
+    {
+      type: "error_correction",
+      prompt: "Correct the sentence: 'There were too much people in the concert.'",
+      note: "Check quantifiers.",
+      correct: "There were too many people at the concert.",
+      rationale: "Use 'many' with countable nouns and preposition 'at' for events.",
+      tag: "quantifiers",
+    },
+    {
+      type: "sentence_transformation",
+      prompt: "Rewrite using the word given: 'Although he was tired, he went to work.' (IN SPITE OF)",
+      note: "Use 5–8 words.",
+      correct: "In spite of being tired, he went to work.",
+      rationale: "Use 'in spite of' followed by a gerund or noun.",
+      tag: "linkers",
+    },
+    {
+      type: "mcq",
+      prompt: "If I'd known about the exam, I ____ harder.",
+      options: ["would have studied", "will have studied", "would study", "will study"],
+      correct: "would have studied",
+      rationale: "Third conditional uses 'would have' + past participle in the result clause.",
+      tag: "conditionals",
+    },
+    {
+      type: "gap_fill",
+      prompt: "It's high time you ____ to bed.",
+      note: "Use the correct verb form.",
+      correct: "went",
+      rationale: "After 'it's high time', use past simple to suggest an action in the present.",
+      tag: "time_expressions",
     },
   ];
-  // Shuffle the templates to vary the exercise order on each call
+  // Shuffle templates and select up to 'count' unique items
   const shuffled = templates
     .map((t) => ({ sort: Math.random(), value: t }))
     .sort((a, b) => a.sort - b.sort)
     .map((t) => t.value);
-  // Generate the final items list up to the requested count, cycling through the shuffled templates
-  // Use an untyped array for final items. Specifying a discriminated union type here causes
-  // TypeScript to require the `options` property on non‑MCQ items, which isn't needed.
-  const finalItems: any[] = [];
-  for (let k = 0; k < count; k++) {
-    const template = shuffled[k % shuffled.length];
-    finalItems.push({
-      item_id: id("i"),
-      type: template.type,
-      prompt: template.prompt,
-      options: template.options,
-      note: template.note,
-    });
+  const selected: Template[] = [];
+  for (let i = 0; i < count; i++) {
+    selected.push(shuffled[i % shuffled.length]);
   }
-  // Build the answer key for each generated item
-  const key = finalItems.map((it) => {
-    if (it.type === "mcq") {
-      const correct = it.prompt.includes("film") ? "had started" : "should";
-      return {
-        item_id: it.item_id,
-        correct_answer: correct,
-        rationale: it.prompt.includes("film")
-          ? "Past perfect shows the earlier action happened before we arrived."
-          : "‘Should have’ expresses criticism about a past action.",
-        tag: it.prompt.includes("film") ? "narrative_tenses" : "modals",
-      };
-    }
-    if (it.type === "gap_fill") {
-      return {
-        item_id: it.item_id,
-        correct_answer: "had known",
-        rationale: "Third conditional uses past perfect in the if-clause.",
-        tag: "conditionals",
-      };
-    }
-    if (it.type === "sentence_transformation") {
-      return {
-        item_id: it.item_id,
-        correct_answer: "Although she was tired, she finished the report.",
-        rationale: "Use ‘although’ to introduce the contrast clause.",
-        tag: "linkers",
-      };
-    }
-    // error_correction
+  // Create final items and answer key from selected templates
+  const finalItems: any[] = selected.map((tpl) => {
+    return {
+      item_id: id("i"),
+      type: tpl.type,
+      prompt: tpl.prompt,
+      options: tpl.options,
+      note: tpl.note,
+    };
+  });
+  const key = finalItems.map((it, index) => {
+    const tpl = selected[index];
     return {
       item_id: it.item_id,
-      correct_answer: "I went to London last year.",
-      rationale:
-        "A finished time in the past (‘last year’) takes past simple, not present perfect.",
-      tag: "narrative_tenses",
+      correct_answer: tpl.correct,
+      rationale: tpl.rationale,
+      tag: tpl.tag,
     };
   });
   return {
