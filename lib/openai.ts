@@ -27,13 +27,15 @@ export async function callOpenAIJson({
       { role: "developer", content: developer }
     ],
     temperature,
-    response_format: {
-      type: "json_schema",
-      json_schema: {
+  text: {
+      format: {
+        type: "json_schema",
         name: schemaName,
         schema
       }
     },
+
+
     store: false
   };
   const res = await fetch("https://api.openai.com/v1/responses", {
